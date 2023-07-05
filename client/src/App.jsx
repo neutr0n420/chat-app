@@ -3,9 +3,10 @@ import {BrowserRouter as Router, Routes,Route } from 'react-router-dom'
 import Home from './pages/home/index'
 import io from 'socket.io-client'
 import { useState } from 'react'
+import { nanoid } from 'nanoid'
 
 
-const socket = io.connect('http://localhost:5173')
+const socket = io.connect('http://localhost:4000')
 function App() {
   const [username, setUsername] = useState('')
   const [room, setRoom] = useState('')

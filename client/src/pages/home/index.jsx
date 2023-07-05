@@ -7,11 +7,12 @@ const Home = ({username, setUsername, room, setRoom, socket}) =>{
     const navigate = useNavigate()
 
     const joinRoom = () =>{
-        if(username !=='' && username !== ''){
+        if(username !=='' && room !== ''){
             socket.emit('join_room', {username, room})
             console.log("Room joined")
+            console.log(username, room)
+            navigate('/chat', {replace: true})
         }
-        navigate('/chat', {replace: true})
     }
     return(
         <div className={styles.container}>
