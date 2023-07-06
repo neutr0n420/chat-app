@@ -1,18 +1,34 @@
-const express = require('express')
-const cors = require('cors')
-const http = require('http')
-const {Server}  = require('socket.io')
+const express = require('express');
+const app = express();
+const http = require('http');
+const cors = require('cors');
+const { Server } = require('socket.io'); // Add this
 
-const app = express()
+app.use(cors()); // Add cors middleware
 
-app.use(cors())
+const server = http.createServer(app); // Add this
 
-const server = http.createServer(app)
 
-app.get('/', (request, response)=>{
-    response.send('<h1>Hello world</h1>')
+const io = new Server(server, {
+    cors:{
+        origin: 'http://localhost:5173',
+        methods: ['GET','POST']
+    }
+});
+
+// Add this
+// Listen for when the client connects via socket.io-client
+
+io.on("connection", (socket) =>{
+    console.log("user connected", socket.id)
+
+    socket.on('join_room', (data)=>{
+        const {username, room} = data
+        socket.join(room)
+    })
+    
+   
 })
 
-const PORT = 4000
 
-server.listen(PORT, () => `server is running on the ${PORT} port`)
+server.listen(4000, () => 'Server is running on port 4000');
