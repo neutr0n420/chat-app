@@ -19,15 +19,31 @@ const io = new Server(server, {
 // Add this
 // Listen for when the client connects via socket.io-client
 
+const CHAT_BOT = 'ChatBot'
+let allUser = []
+let chatRoom = '' 
 io.on("connection", (socket) =>{
     console.log("user connected", socket.id)
-
+    // adding a user to the room
     socket.on('join_room', (data)=>{
+        console.log(data)
         const {username, room} = data
         socket.join(room)
-    })
-    
-   
+        let __createdtime__ = Date.now()
+        
+        // this will be sent to the user who are currently present in the room , apart from the user that just joined.
+        console.log(socket.to(room).emit('receive_message', {
+            message: `${username} has joined a chat room`,
+            username: CHAT_BOT,
+            __createdtime__,
+        }))
+        chatRoom = room
+        allUser.push({id:socket.id, username, room})
+        chatRoomUsers = allUser.filter((user) => user.room === room) 
+        socket.to(room).emit('chatroom_users', chatRoomUsers)
+        socket.emit('chatroom_user', chatRoomUsers)
+        
+    })  
 })
 
 

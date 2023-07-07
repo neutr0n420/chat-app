@@ -4,6 +4,7 @@ import Home from './pages/home/index'
 import io from 'socket.io-client'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
+import Chat from './pages/chat'
 
 
 const socket = io.connect('http://localhost:4000')
@@ -26,6 +27,10 @@ function App() {
                 socket = {socket}
               />
             }/>
+            <Route
+              path='/chat'
+              element={<Chat username ={username} room ={room} socket={socket}/>}
+            />
         </Routes>
       </div>
     </Router>

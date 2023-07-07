@@ -10,7 +10,7 @@ const Home = ({username, setUsername, room, setRoom, socket}) =>{
         if(username !=='' && room !== ''){
             socket.emit('join_room', {username, room})
             console.log("Room joined")
-            console.log(username, room)
+            // console.log(username, room)
             navigate('/chat', {replace: true})
         }
     }
