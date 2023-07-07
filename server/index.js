@@ -23,20 +23,24 @@ const CHAT_BOT = 'ChatBot'
 let allUser = []
 let chatRoom = '' 
 io.on("connection", (socket) =>{
-    console.log("user connected", socket.id)
+    // console.log("user connected", socket.id)
     // adding a user to the room
     socket.on('join_room', (data)=>{
-        console.log(data)
+        // console.log(data)
         const {username, room} = data
         socket.join(room)
         let __createdtime__ = Date.now()
-        
+        socket.emit('receive_message',{
+            message:`${username} has joined a chat room`,
+            username: CHAT_BOT,
+            __createdtime__
+        })
         // this will be sent to the user who are currently present in the room , apart from the user that just joined.
-        console.log(socket.to(room).emit('receive_message', {
+        socket.to(room).emit('receive_message', {
             message: `${username} has joined a chat room`,
             username: CHAT_BOT,
             __createdtime__,
-        }))
+        })
         chatRoom = room
         allUser.push({id:socket.id, username, room})
         chatRoomUsers = allUser.filter((user) => user.room === room) 
