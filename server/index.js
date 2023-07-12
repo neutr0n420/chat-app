@@ -5,8 +5,9 @@ const http = require('http');
 const cors = require('cors');
 const axios = require('axios')
 const { Server } = require('socket.io'); // Add this
-// const harperSaveMessage = require('./services/harper-save-message')
-
+const harperSaveMessage = require('./services/harper-save-message')
+// const harperGetMessages = require('./services/harper-get-messages')
+const leaveRoom = require('./utils/leave-room')
 // console.log(harperSaveMessage())
 
 app.use(cors()); // Add cors middleware
@@ -21,50 +22,11 @@ const io = new Server(server, {
     }
 });
 
-// Add this
 // Listen for when the client connects via socket.io-client
 
 const CHAT_BOT = 'ChatBot'
 let allUser = []
 let chatRoom = '' 
-const harperSaveMessage = (message, username, room) =>{
-  const dbUrl = process.env.HARPERDB_URL;
-  const dbPw = process.env.HARPERDB_PW;
-  if (!dbUrl || !dbPw) return null;
-
-  var data = JSON.stringify({
-    operation: 'insert',
-    schema: 'realtime_chat_app',
-    table: 'messages',
-    records: [
-      {
-        message,
-        username,
-        room,
-      },
-    ],
-  });
-
-  var config = {
-    method: 'post',
-    url: dbUrl,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: dbPw,
-    },
-    data: data,
-  };
-
-  return new Promise((resolve, reject) => {
-    axios(config)
-      .then(function (response) {
-        resolve(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        reject(error);
-      });
-  });
-}
 
 
 io.on("connection", (socket) =>{
@@ -90,19 +52,38 @@ io.on("connection", (socket) =>{
         allUser.push({id:socket.id, username, room})
         chatRoomUsers = allUser.filter((user) => user.room === room) 
         socket.to(room).emit('chatroom_users', chatRoomUsers)
-        socket.emit('chatroom_user', chatRoomUsers)
-
-        
+        socket.emit('chatroom_users', chatRoomUsers)
+        // console.log(harperGetMessages('javascript'))
+        // harperGetMessages(room)
+        //   .then((last100Messages)=>{
+        //     socket.emit('last_100_messages', last100Messages);
+        //   })
+        //   .catch((error)=> console.log(error))
     }) 
     
     socket.on('send_messages', (data) => {
         const { message, username, room, __createdtime__ } = data;
         io.in(room)
-        io.emit('receive_message', data);
+        io.in(room).emit('receive_message', data);
         harperSaveMessage(message, username, room, __createdtime__) // Save message in db
           .then((response) => console.log(response))
           .catch((err) => console.log(err));
       });
+    socket.on('leave_room', (data)=>{
+      const {username, room} = data
+      socket.leave(room)
+      const __createdtime__ = Date.now()
+      allUser = leaveRoom(socket.id, allUser)
+      socket.to(room)
+      socket.emit('chatroom-users', allUser)
+      socket.to(room).emit('chatroom-users',allUser)
+      socket.emit('receive_message', {
+        username: CHAT_BOT,
+        message: `${username} has left the chat`,
+        __createdtime__,
+      })
+      console.log((`${username} has left the chat`))
+    })
 })
 
 

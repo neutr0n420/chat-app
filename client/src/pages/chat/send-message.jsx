@@ -13,16 +13,16 @@ const SendMessage = ({socket, username, room}) =>{
     }
     return(
         <div className={styles.sendMessageContainer}>
-            <input 
-                className={styles.sendMessageContainer}
-                placeholder='Message'
-                onChange={(e)=>setMessage(e.target.value)}
-                value={message}
-            />
-            <button className= 'btn btn-primary' onClick={sendMessage}>
-                Send Message
-            </button>
-        </div>
+      <input
+        className={styles.messageInput}
+        placeholder='Message...'
+        onChange={(e) => setMessage(e.target.value)}
+        value={message}
+      />
+      <button className='btn btn-primary' onClick={sendMessage}>
+        Send Message
+      </button>
+    </div>
     )
 }
 export default SendMessage

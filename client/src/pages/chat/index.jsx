@@ -1,10 +1,11 @@
 import styles from './styles.module.css'
 import MessagesReceived from './Messages'
 import SendMessage from './send-message'
-
+import RoomsAndUsers from './room-and-join'
 const Chat = ({socket, username, room}) =>{
     return(
-        <div className={StyleSheet.chatContainer}>
+        <div className={styles.chatContainer}>
+            <RoomsAndUsers socket={socket} username={username} room = {room}/>
             <div>
                 <MessagesReceived socket={socket}/>
                 <SendMessage 
@@ -12,6 +13,7 @@ const Chat = ({socket, username, room}) =>{
                     username={username}
                     room = {room}
                 />
+
             </div>
         </div>
     )
