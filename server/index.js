@@ -21,6 +21,7 @@ const io = new Server(server, {
         methods: ['GET','POST']
     }
 });
+app.use(express.static('dist'))
 
 // Listen for when the client connects via socket.io-client
 
@@ -89,4 +90,4 @@ io.on("connection", (socket) =>{
 
 
 
-server.listen(4000, () => 'Server is running on port 4000');
+server.listen(4000, () => console.log('Server is running on port 4000'));

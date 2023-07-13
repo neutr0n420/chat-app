@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const RoomAndUsers = ({ socket, username, room }) => {
   const [roomUsers, setRoomUsers] = useState([]);
-  const [leaveMessage, setLeaveMessages] = useState([])
   console.log(username, room)
   const navigate = useNavigate();
 
@@ -24,7 +23,6 @@ const RoomAndUsers = ({ socket, username, room }) => {
 
     navigate('/', { replace: true });
   };
-console.log(leaveMessage)
   return (
     <div className={styles.roomAndUsersColumn}>
       <h2 className={styles.roomTitle}>{room}</h2>
@@ -36,6 +34,7 @@ console.log(leaveMessage)
             <li
               style={{
                 fontWeight: `${user.username === username ? 'bold' : 'normal'}`,
+                color:'#6c757d',
               }}
               key={user.id}
             >

@@ -6,7 +6,7 @@ body{
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background: rgb(63, 73, 204);
+  background: #f8f9fa;
 }
 ::-webkit-scrollbar{
   width: 20px;
@@ -34,13 +34,13 @@ body{
 .btn-outline{
   color: rgb(153, 217, 234);
   border: 1px solid rgb(153, 217, 234);
-  background: rgb(63, 73, 204)
+  background: #6153CC
 }
 .btn-primary{
-  background: rgb(153, 217, 234);
+  background: #6153CC;
   color: rgb(0, 24, 111)
 }
 .btn-secondary{
-  background: rgb(0, 24, 111);
+  background: #6153CC;
   color: #fff;
 }
